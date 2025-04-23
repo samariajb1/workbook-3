@@ -1,0 +1,6 @@
+
+System.out.printf(
+                        "%-5d %-20s $%,10.2f%n",
+                        emp.getId(),
+                        emp.getEmployeeName(),
+                        emp.getGrossPay()

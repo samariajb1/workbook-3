@@ -1,34 +1,31 @@
 package com.plurasight;
 
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
-
 
 public class Payroll {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        //1. Prompt user their file name/ Reading from
-        String path = "src/main/resources/employees.csv";
+
+        System.out.print("Enter the name of the employee file to process: ");
+        String inputFileName = scanner.nextLine();
+
+        System.out.print("Enter the name of the payroll file to create: ");
+        String outputFileName = scanner.nextLine();
+
+        String inputPath = "src/main/resources/" + inputFileName;
+        String outputPath = "src/main/resources/output/" + outputFileName;
 
         try {
-            System.out.print("Enter the name of the file employee file to process: ");
-            String input = scanner.nextLine();
-            System.out.print("Enter the name of the payroll file to create: ");
-            String input2 = scanner.nextLine();
-            BufferedReader reader = new BufferedReader(new FileReader(path));
-// Skipping first line, reading next line
-            reader.readLine();
+        BufferedReader reader = new BufferedReader(new FileReader(inputPath));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+
+            writer.write("id|name|gross pay\n"); // header
+
+            reader.readLine(); // skip header in input
 
             String line;
-            System.out.printf("%-5s %-20s %10s%n", "ID", "Name", "Gross Pay");
-            System.out.println("------------------------------------------------");
-
             while ((line = reader.readLine()) != null) {
-                // 1. split into tokens
                 String[] tokens = line.split("\\|");
 
                 int id = Integer.parseInt(tokens[0]);
@@ -36,23 +33,18 @@ public class Payroll {
                 double hours = Double.parseDouble(tokens[2]);
                 double rate = Double.parseDouble(tokens[3]);
 
-                // 3. create Employee
                 Employees emp = new Employees(id, name, hours, rate);
+                double grossPay = emp.getGrossPay();
 
-                // 4. print results
-                System.out.printf(
-                        "%-5d %-20s $%,10.2f%n",
-                        emp.getId(),
-                        emp.getEmployeeName(),
-                        emp.getGrossPay()
-                );
+                writer.write(id + "|" + name + "|" + String.format("%.2f", grossPay) + "\n");
             }
 
+            System.out.println("Payroll file created successfully at: " + outputPath);
+            reader.close();
+            writer.close();
+
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.err.println("Error reading or writing file: " + e.getMessage());
         }
     }
-
-
-        }
-
+}
