@@ -10,9 +10,19 @@ import java.util.Scanner;
 
 public class Payroll {
     public static void main(String[] args) {
-
+        Scanner scanner = new Scanner(System.in);
+        //1. Prompt user their file name/ Reading from
         String path = "src/main/resources/employees.csv";
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+
+        try {
+            System.out.print("Enter the name of the file employee file to process: ");
+            String input = scanner.nextLine();
+            System.out.print("Enter the name of the payroll file to create: ");
+            String input2 = scanner.nextLine();
+            BufferedReader reader = new BufferedReader(new FileReader(path));
+// Skipping first line, reading next line
+            reader.readLine();
+
             String line;
             System.out.printf("%-5s %-20s %10s%n", "ID", "Name", "Gross Pay");
             System.out.println("------------------------------------------------");
@@ -45,3 +55,4 @@ public class Payroll {
 
 
         }
+
